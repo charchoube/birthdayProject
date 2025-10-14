@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Special Surprise</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Password Page */
+        #password-page {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .password-container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .password-container h1 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
+
+        .password-container p {
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .password-input {
+            width: 100%;
+            padding: 15px;
+            font-size: 1.1em;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            transition: border 0.3s;
+        }
+
+        .password-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .unlock-btn {
+            display: inline-block;
+            padding: 15px 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
+            font-size: 1.1em;
+            font-weight: bold;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .unlock-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Birthday Page */
+        #birthday-page {
+            display: none;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        #birthday-page:target {
+            display: block;
+        }
+
+        #birthday-page:target ~ #password-page {
+            display: none;
+        }
+
+        .birthday-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .birthday-title {
+            font-size: 4em;
+            color: white;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+            margin-bottom: 30px;
+            animation: bounce 1s ease-in-out infinite alternate;
+        }
+        .birthday-paragraph {
+            font-size: 25px;
+            color: white;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.3);
+            margin-bottom: 30px;
+        }
+
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-20px); }
+        }
+
+        .party-button {
+            padding: 20px 50px;
+            font-size: 1.5em;
+            background: white;
+            color: #f5576c;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transition: all 0.3s;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .party-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+        }
+
+        /* Confetti Particles */
+        .confetti {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            opacity: 0;
+            z-index: 1000;
+        }
+
+        .confetti.burst {
+            animation: fly 2.5s ease-out forwards;
+        }
+
+        @keyframes fly {
+            0% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                transform: translate(var(--tx), var(--ty)) rotate(var(--rotation)) scale(0.5);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .birthday-title {
+                font-size: 2.5em;
+            }
+            .party-button {
+                font-size: 1.2em;
+                padding: 15px 35px;
+            }
+        }
+    </style>
+    <script>
+        function checkPassword() {
+            const input = document.getElementById('passwordInput');
+            const error = document.getElementById('error-message');
+            const password = input.value.trim();
+            
+            if (password === 'CharuSabkaBaap') {
+                window.location.hash = '#birthday-page';
+            } else {
+                error.style.display = 'block';
+                input.value = '';
+                input.focus();
+            }
+        }
+
+        function partyPopper() {
+            const container = document.getElementById('birthday-page');
+            const existingConfetti = container.querySelectorAll('.confetti');
+            existingConfetti.forEach(c => c.remove());
+            
+            const colors = ['#ff6b6b', '#4ecdc4', '#ffe66d', '#a8e6cf', '#ff8b94', '#c7ceea', '#ffd3b6', '#ffaaa5', '#dcedc1', '#ff8c94'];
+            const confettiCount = 80;
+            
+            for (let i = 0; i < confettiCount; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                
+                const side = Math.floor(Math.random() * 4);
+                let startX, startY, endX, endY;
+                
+                if (side === 0) {
+                    startX = Math.random() * window.innerWidth;
+                    startY = -30;
+                    endX = (Math.random() - 0.5) * window.innerWidth * 1.5;
+                    endY = window.innerHeight + Math.random() * 300;
+                } else if (side === 1) {
+                    startX = window.innerWidth + 30;
+                    startY = Math.random() * window.innerHeight;
+                    endX = -window.innerWidth - Math.random() * 300;
+                    endY = (Math.random() - 0.5) * window.innerHeight * 1.5;
+                } else if (side === 2) {
+                    startX = Math.random() * window.innerWidth;
+                    startY = window.innerHeight + 30;
+                    endX = (Math.random() - 0.5) * window.innerWidth * 1.5;
+                    endY = -window.innerHeight - Math.random() * 300;
+                } else {
+                    startX = -30;
+                    startY = Math.random() * window.innerHeight;
+                    endX = window.innerWidth + Math.random() * 300;
+                    endY = (Math.random() - 0.5) * window.innerHeight * 1.5;
+                }
+                
+                confetti.style.left = startX + 'px';
+                confetti.style.top = startY + 'px';
+                confetti.style.setProperty('--tx', endX + 'px');
+                confetti.style.setProperty('--ty', endY + 'px');
+                confetti.style.setProperty('--rotation', (Math.random() * 1440 - 720) + 'deg');
+                
+                container.appendChild(confetti);
+                
+                setTimeout(() => {
+                    confetti.classList.add('burst');
+                }, 10);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('passwordInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    checkPassword();
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <div id="birthday-page">
+        <div class="birthday-content">
+            <h1 class="birthday-title">🎂 HAPPY BIRTHDAY BABY! 🎂</h1>
+            <p class="birthday-paragraph">So today is your special day baby</p>
+            <button onclick="partyPopper()" class="party-button">❤️ It's your day Akanksha! ❤️</button>
+        </div>
+    </div>
+
+    <div id="password-page">
+        <div class="password-container">
+            <h1>🔒 Secret Surprise</h1>
+            <p>Enter the magic word to continue...</p>
+            <input type="text" class="password-input" id="passwordInput" placeholder="Hint: It's your special day baby!">
+            <button onclick="checkPassword()" class="unlock-btn" style="border: none; cursor: pointer;">Unlock Surprise</button>
+            <p id="error-message" style="color: #f5576c; margin-top: 15px; font-size: 0.9em; display: none;">Oops! Wrong password. Try again! 💝</p>
+        </div>
+    </div>
+</body>
+</html>
